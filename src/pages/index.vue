@@ -5,7 +5,7 @@
 		<VSheet class="d-flex ga-4">
 			<VCard width="240" title="Budget">
 				<template #actions>
-					<VBtn text="Open" href="http://budget.mlc.local" />
+					<VBtn text="Open" href="http://budget.mlc.local:3000" />
 				</template>
 			</VCard>
 		</VSheet>
