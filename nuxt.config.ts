@@ -1,5 +1,6 @@
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 
+const port = process.env.PORT ?? 7100;
 // Init render mode based on env
 const mode = process.env.RENDER_MODE ?? "CSR";
 const ssrEnabled = () => {
@@ -68,5 +69,8 @@ export default defineNuxtConfig({
 		public: {
 			apiBase: "", // overridden by NUXT_PUBLIC_API_BASE
 		},
+	},
+	devServer: {
+		port: Number(port),
 	},
 });
