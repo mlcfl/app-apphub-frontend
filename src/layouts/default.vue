@@ -1,9 +1,13 @@
 <template>
 	<VLayout>
-		<VAppBar>
-			<VAppBarTitle>Application Hub</VAppBarTitle>
+		<VAppBar elevation="0" class="border-b-thin">
+			<VAppBarTitle>AppHub</VAppBarTitle>
 			<template #append>
-				<VBtn variant="outlined" class="mr-5" :loading="loading" @click="logout"
+				<VBtn
+					variant="outlined"
+					class="mr-5"
+					:loading="isLogoutPending"
+					@click="logout"
 					>Logout</VBtn
 				>
 			</template>
@@ -23,38 +27,17 @@
 </template>
 
 <script lang="ts" setup>
-const config = useRuntimeConfig();
-const loading = ref(false);
+import { useLogoutMutation } from "~/api";
+
+useHead({ title: "MLC | AppHub" });
+
 const { toastVisible, toastMessage, showToast } = useToast();
 
-// Redirect url
-const url = useRequestURL();
-const authUrl = computed(() => {
-	const { protocol, host } = url;
-	const domain = host.split(".").slice(-2).join(".");
-
-	return `${protocol}//auth.${domain}`;
-});
-
 // Handle logout
-const logout = async () => {
-	loading.value = true;
-
-	try {
-		const { apiBase } = config.public;
-		await $fetch(`${apiBase}/api/signout`, {
-			method: "POST",
-			headers: {
-				"X-Requested-With": "XMLHttpRequest",
-			},
-		});
-
-		await navigateTo(authUrl.value, { external: true });
-	} catch (e) {
+const { mutate: logout, isPending: isLogoutPending } = useLogoutMutation({
+	onError(e: Error) {
 		console.error(e);
 		showToast(e instanceof Error ? e.toString() : String(e));
-	}
-
-	loading.value = false;
-};
+	},
+});
 </script>
