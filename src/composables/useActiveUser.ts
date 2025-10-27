@@ -1,22 +1,14 @@
-export const useActiveUser = () => {
-	const config = useRuntimeConfig();
+import { useActiveUserQuery } from "~/api";
 
-	const { data, status } = useFetch<{ login: string }>(
-		`${config.public.apiBase}/api/user`,
-		{
-			server: false,
-			headers: {
-				"X-Requested-With": "XMLHttpRequest",
-			},
-		}
-	);
+export const useActiveUser = () => {
+	const { data, isPending, isError } = useActiveUserQuery();
 
 	const login = computed(() => {
-		if (["pending", "idle"].includes(status.value)) {
+		if (isPending.value) {
 			return "Loading user...";
 		}
 
-		if (status.value === "error") {
+		if (isError.value) {
 			return "Error loading user";
 		}
 
